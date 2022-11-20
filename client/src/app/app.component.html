@@ -1,0 +1,38 @@
+<div class="card">
+  <mat-card style="width: 50vw; margin: auto; padding: 40px; border-radius: 40px;">
+    <mat-card-title style="padding: 0 20px;">
+      <h3>Cloud Uploader</h3>
+    </mat-card-title>
+    <div class="drop-zone" (click)="fileSelect.click()" (drop)="dropHandler($event)" (dragover)="dragOverHandler($event)">
+      <i class="material-icons">cloud_upload</i>
+      <p>
+        <span>Drag & Drop</span> or Browse Files 
+      </p>
+    </div>
+    <div *ngFor="let file of selectedFiles" class="file-list">
+      <small [style.color]="file.uploadCompleted ? 'royalblue' : 'dimgray'"> 
+        <i class="material-icons" >insert_drive_file</i>
+        <span class="file-name">{{file.fileName | slice:0:30}}</span>
+      </small>
+      <div class="bar">
+        <div class="bar-left">
+          <mat-progress-bar mode="determinate" [value]="file?.uploadPercent"></mat-progress-bar>
+          <div class="bar-down" [style.color]="file.uploadCompleted ? 'royalblue' : 'dimgray'">
+            <span>{{file?.updatedSize ? formatSize(file?.updatedSize) : file?.uploadedBytes ? formatSize(file?.uploadedBytes) : '0 B'}} / {{formatSize(file?.selectedFile?.size) || 0}}</span>
+            <!-- <span>{{formatSize(file?.updatedSize) || formatSize(file?.updatedSize) || '0 B'}} / {{formatSize(file?.selectedFile?.size) || 0}}</span> -->
+            <span>{{file?.uploadPercent}}%</span>
+          </div>
+        </div>
+        <div class="bar-right">
+          <button mat-button (click)="deleteFile(file)">
+            <i class="material-icons" [style.color]="file.uploadCompleted ? 'royalblue' : 'dimgray'">{{file.uploadCompleted ? 'check' : 'close'}}</i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div style="text-align: center;">
+      <input type="file" hidden #fileSelect name="largeFile" (change)="onFileSelect($event)" multiple />
+      <button mat-raised-button style="background-color: royalblue;" *ngIf="selectedFiles.length > 0" color="primary" (click)="uploadFiles()">Upload to Server</button>
+    </div>
+  </mat-card>
+</div>
